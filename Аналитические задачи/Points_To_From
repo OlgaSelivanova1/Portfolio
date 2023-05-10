@@ -1,0 +1,53 @@
+CREATE OR REPLACE VIEW point_from_to_addr
+AS
+/*создадим временную таблицу Т1 для поиска пассажиров, у которых более 10 поездок и сосчитаем количество точек отправления у такх пассажиров (CNT1)*/
+WITH T1 AS (
+    SELECT O.PASSENGER_ID
+          ,FROM_ADDRESS_ID
+          ,COUNT(FROM_ADDRESS_ID) CNT1
+      FROM ORDER1 O
+    JOIN WAY W
+    ON O.ID = W.ORDER_ID
+    WHERE PASSENGER_ID IN (SELECT PASSENGER_ID FROM ORDER1 GROUP BY PASSENGER_ID HAVING COUNT(ID) >10)/*находим пассажиров(id), у которых количество поездок >10*/
+    GROUP BY O.PASSENGER_ID,FROM_ADDRESS_ID
+    ORDER BY 3 DESC /*необходима сортировка по убыванию для выявления самых часто используемых точек отправления*/
+),
+    /*создадим временную таблицу Т2 для поиска пассажиров, у которых более 10 поездок и сосчитаем количество точек прибывания у такх пассажиров (CNT2)*/
+T2 AS
+(   SELECT O.PASSENGER_ID
+          ,TO_ADDRESS_ID
+          ,COUNT(TO_ADDRESS_ID) CNT2
+        FROM ORDER1 O
+    JOIN WAY W
+    ON O.ID = W.ORDER_ID
+    WHERE PASSENGER_ID IN (SELECT PASSENGER_ID FROM ORDER1 GROUP BY PASSENGER_ID HAVING COUNT(ID) >10)
+    GROUP BY O.PASSENGER_ID,TO_ADDRESS_ID
+    ORDER BY 3 DESC /*необходима сортировка по убыванию для выявления самых часто используемых точек прибывания*/
+)
+
+SELECT PASSENGER_ID
+       ,ADRESS_ID /*Заключительным запросом выведем, как и просят в задаче, id пассажиров и точки прибывания или отправления,которые использовались 5 раз*/
+    FROM (
+SELECT PASSENGER_ID
+        ,ADRESS_ID, CNT_ALL 
+        ,ROW_NUMBER () OVER (PARTITION BY PASSENGER_ID ORDER BY CNT_ALL DESC) R_N /*с помощью аналитической функции зададим ранг каждой точке по количеству ее использования каждым пассажиром*/
+    FROM (
+SELECT PASSENGER_ID
+      ,ADRESS_ID
+      ,SUM(CNT1) CNT_ALL /*сосчитаем количество использования точек отправления или прибывания и зададим псевдоним для объединенной колонки(cnt_all)*/
+    FROM 
+/*создадим объединение всех строчек из таблиц Т1 и Т2 чтобы поместить в один столбец значения CNT1 и CNT2и  наш отчет был согласно условию задачи: точек отправления ИЛИ точек прибывания*/
+        (
+SELECT PASSENGER_ID,FROM_ADDRESS_ID ADRESS_ID, CNT1
+    FROM T1
+    
+    union all
+    
+SELECT PASSENGER_ID,TO_ADDRESS_ID , CNT2
+    FROM T2
+    )
+GROUP BY PASSENGER_ID,ADRESS_ID
+    )
+    )
+WHERE R_N = 5 
+ORDER BY 1,2 DESC;

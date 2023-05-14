@@ -1,0 +1,42 @@
+CREATE OR REPLACE VIEW PASS_TO_DRIVER
+AS
+WITH T1 AS ( 
+SELECT PASSENGER_ID
+      ,DRV
+      ,NEW_NEW 
+    FROM(
+SELECT PASSENGER_ID
+      ,DRV,QTY_DRV
+      ,NEW_QTY_DRV
+      ,ROW_NUMBER () OVER (PARTITION BY PASSENGER_ID ORDER BY NEW_QTY_DRV) NEW_NEW /*выводим количество водителей у каждого пассажира*/
+    FROM(
+SELECT PASSENGER_ID, DRV
+     ,COUNT(DRV) OVER (PARTITION BY PASSENGER_ID ORDER BY PASSENGER_ID) QTY_DRV
+     ,COUNT(DRV) OVER (PARTITION BY PASSENGER_ID ORDER BY PASSENGER_ID,DBMS_RANDOM.VALUE(1,3)) NEW_QTY_DRV /*задаем рандомный порядок вывода водителей*/
+    FROM(
+SELECT DISTINCT O1.PASSENGER_ID,D.ID DRV    /*находим пассажировбсделавших заказы и водителей,которые зарегистрированы в базе,работают на данный момент и не ездили с пассажиром*/
+    FROM DRIVER D
+FULL OUTER JOIN ORDER1 O1
+ON D.ID <> O1.DRIVER_ID      
+MINUS    
+SELECT DISTINCT O.PASSENGER_ID,O.DRIVER_ID
+    FROM ORDER1 O
+GROUP BY PASSENGER_ID,O.DRIVER_ID
+        )
+    WHERE DRV IS NOT NULL
+        )  
+    WHERE QTY_DRV>=5
+        )
+    WHERE NEW_NEW <=5
+--ORDER BY 1,2
+),T2 AS ( /*выводим средний рейтинг водителей,который  больше 4*/
+SELECT DRIVER_ID
+       ,AVG(RATING) AVG_RTNG
+    FROM DRIVER_RATING
+GROUP BY DRIVER_ID
+HAVING AVG(RATING)>=4
+        )
+SELECT PASSENGER_ID,DRV,AVG_RTNG
+FROM T1 JOIN T2
+ON T1.DRV = T2.DRIVER_ID
+ORDER BY 1,2;

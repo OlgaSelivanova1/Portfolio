@@ -34,7 +34,7 @@ Service Taxi - это Веб-приложение,созданное в ORACLE A
 бензин в рублях с учётом курса валюты на тот момент, когда была оплата за бензин. Для
 данного представления в apex необходимо будет создать столбчатую диаграмму.</h5>
 <a href = "https://github.com/OlgaSelivanova1/Portfolio/blob/f8407f2feae5bf622708703f4d00cc93997e0896/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D0%B8/MaxTarif_City.sql"target="_blank">Аналитические задачи/MaxTarif_City.sql</a>
-<h6><ins> <a href = https://github.com/OlgaSelivanova1/Portfolio/blob/ba5e86358679be4bd80b29fbba84587a93bf501e/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D0%B8/SCREEN/MaxTarif_City.jpg"target="_blank">Результат</a></ins></h6>
+<h6><ins> <a href = "https://github.com/OlgaSelivanova1/Portfolio/blob/ba5e86358679be4bd80b29fbba84587a93bf501e/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D0%B8/SCREEN/MaxTarif_City.jpg"target="_blank">Результат</a></ins></h6>
  <h5> -Создать представление, которое отобразит средний чек за поездку в разных странах.
 Для данного представления в apex необходимо будет создать пончиковую диаграмму.</h5>
 <a href = "https://github.com/OlgaSelivanova1/Portfolio/blob/main/%D0%90%D0%BD%D0%B0%D0%BB%D0%B8%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D0%B8/AVG_PAY_TOWAY.sql"target="_blank">Аналитические задачи/AVG_PAY_TOWAY.sql</a>
